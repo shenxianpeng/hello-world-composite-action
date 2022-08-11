@@ -85,6 +85,9 @@ runs:
   using: "composite"
   steps:
     - run: |
+        echo "Install clang-tools"
+        pip install clang-tools
+        clang-tools -i ${{ inputs.version }}
         echo "Install cpp-linter"
         python3 -m pip install git+https://github.com/cpp-linter/cpp-linter-action@v1
         cpp-linter \
