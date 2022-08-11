@@ -87,6 +87,19 @@ runs:
     - run: |
         echo "Install cpp-linter"
         python3 -m pip install git+https://github.com/cpp-linter/cpp-linter-action@v1
+        cpp-linter \
+          --style=${{ inputs.style }} \
+          --extensions=${{ inputs.extensions }} \
+          --tidy-checks=${{ inputs.tidy-checks }} \
+          --repo-root=${{ inputs.repo-root }} \
+          --version=${{ inputs.version }} \
+          --verbosity=${{ inputs.verbosity }} \
+          --lines-changed-only=${{ inputs.lines-changed-only }} \
+          --files-changed-only=${{ inputs.files-changed-only }} \
+          --thread-comments=${{ inputs.thread-comments }} \
+          --ignore=${{ inputs.ignore }} \
+          --database=${{ inputs.database }} \
+          --file-annotations=${{ inputs.file-annotations }}
       shell: bash
     - id: get-return-value
       run: echo "::set-output name=return-value::"
