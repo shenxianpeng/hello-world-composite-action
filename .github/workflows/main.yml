@@ -10,5 +10,7 @@ jobs:
         uses: shenxianpeng/hello-world-composite-action@devel
         with:
           style: 'llvm'
+          tidy-checks: '-*'
+          files-changed-only: false
       - run: echo return value ${{ steps.linter.outputs.return-value }}
         shell: bash
