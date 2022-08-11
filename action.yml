@@ -87,6 +87,8 @@ runs:
     - run: |
         echo "Install cpp-linter"
         python3 -m pip install git+https://github.com/cpp-linter/cpp-linter-action@v1
-      shell: bash          
+      shell: bash
     - id: checks-return-value
       run: echo "::set-output name=return-value::$(echo $return-value)"
+      shell: bash
+
