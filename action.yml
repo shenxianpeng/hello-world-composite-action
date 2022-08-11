@@ -1,23 +1,92 @@
-name: 'Hello World'
-description: 'Greet someone'
+name: 'cpp-linter-action'
+description: 'Linter your C/C++ code in workflow.'
+author: shenxianpeng
+branding:
+  icon: "check-circle"
+  color: "green"
 inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
-    required: true
-    default: 'World'
+  thread-comments:
+    description: Set this option to false to disable the use of thread comments as feedback. Defaults to false.
+    required: false
+    default: false
+  file-annotations:
+    description: Set this option to false to disable the use of file annotations as feedback. Defaults to true.
+    required: false
+    default: true
+  style:
+    description: >
+      The style rules to use (defaults to 'llvm').
+      Set this to 'file' to have clang-format use the closest relative .clang-format file.
+    required: false
+    default: "llvm"
+  extensions:
+    description: >
+      The file extensions to run the action against.
+      This comma-separated string defaults to 'c,h,C,H,cpp,hpp,cc,hh,c++,h++,cxx,hxx'.
+    required: false
+    default: "c,h,C,H,cpp,hpp,cc,hh,c++,h++,cxx,hxx"
+  tidy-checks:
+    description: >
+      A string of regex-like patterns specifying what checks clang-tidy will use.
+      This defaults to 'boost-*,bugprone-*,performance-*,readability-*,portability-*,modernize-*,clang-analyzer-*,cppcoreguidelines-*'. See also clang-tidy docs for more info.
+    required: false
+    default: "boost-*,bugprone-*,performance-*,readability-*,portability-*,modernize-*,clang-analyzer-*,cppcoreguidelines-*"
+  repo-root:
+    description: >
+      The relative path to the repository root directory. The default value '.' is relative to the runner's GITHUB_WORKSPACE environment variable.
+    required: false
+    default: "."
+  version:
+    description: "The desired version of the clang tools to use. Accepted options are strings which can be 14, 13, 12, 11, 10, 9, or 8. Defaults to 12."
+    required: false
+    default: "12"
+  verbosity:
+    description: A hidden option to control the action's log verbosity. This is the `logging` level (degaults to DEBUG)
+    required: false
+    default: "10"
+  lines-changed-only:
+    description: Set this option to 'true' to only analyse changes in the event's diff. Defaults to 'false'.
+    required: false
+    default: false
+  files-changed-only:
+    description: Set this option to 'false' to analyse any source files in the repo. Defaults to 'true'.
+    required: false
+    default: true
+  ignore:
+    description: >
+      Set this option with string of path(s) to ignore.
+      - In the case of multiple paths, you can use a pipe character ('|')
+        to separate the multiple paths. Multiple lines are forbidden as input to this option.
+      - This can also have files, but the file's relative path has to be specified
+        as well.
+      - There is no need to use './' for each entry; a blank string ('') represents
+        the repo-root path (specified by the `repo-root` input option).
+      - Path(s) containing a space should be inside single quotes.
+      - Submodules are automatically ignored.
+      - Prefix a path with a bang (`!`) to make it explicitly not ignored - order of
+        multiple paths does take precedence. The `!` prefix can be applied to
+        submodules if desired.
+      - Glob patterns are not supported here. All asterisk characters ('*') are literal.
+    required: false
+    default: ".github"
+  database:
+    description: The directory containing compile_commands.json file.
+    required: false
+    default: ""
 outputs:
-  random-number:
-    description: "Random number"
-    value: ${{ steps.random-number-generator.outputs.random-number }}
+  return-value:
+    description: An integer that can be used as a boolean value to indicate if all checks failed.
+    value: ${{ steps.checks-return-value.outputs.return-value }}
+# outputs:
+#   random-number:
+#     description: "Random number"
+#     value: ${{ steps.random-number-generator.outputs.random-number }}
 runs:
   using: "composite"
   steps:
-    - run: echo Hello ${{ inputs.who-to-greet }}.
-      shell: bash
-    - id: random-number-generator
-      run: echo "::set-output name=random-number::$(echo $RANDOM)"
-      shell: bash
-    - run: echo "${{ github.action_path }}" >> $GITHUB_PATH
+    - run: |
+        echo "Install cpp-linter"
+        python3 -m pip install git+https://github.com/cpp-linter/cpp-linter-action@v1
       shell: bash          
-    - run: goodbye.sh
-      shell: bash
+    - id: checks-return-value
+      run: echo "::set-output name=return-value::$(echo $return-value)"
