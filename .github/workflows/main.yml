@@ -1,7 +1,7 @@
 on: [push]
 
 jobs:
-  hello_world_job:
+  cpp-linter:
     runs-on: ubuntu-latest
     name: cpp-linter
     steps:
@@ -12,5 +12,5 @@ jobs:
           style: 'llvm'
           tidy-checks: '-*'
           files-changed-only: false
-      - run: exit ${{ steps.linter.outputs.return-value }}
+      - run: echo ${{ steps.linter.outputs.return-value }}
         shell: bash

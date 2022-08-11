@@ -76,7 +76,7 @@ inputs:
 outputs:
   return-value:
     description: An integer that can be used as a boolean value to indicate if all checks failed.
-    value: ${{ steps.check-return-value.outputs.return-value }}
+    value: ${{ steps.get-return-value.outputs.return-value }}
 # outputs:
 #   random-number:
 #     description: "Random number"
@@ -88,7 +88,7 @@ runs:
         echo "Install cpp-linter"
         python3 -m pip install git+https://github.com/cpp-linter/cpp-linter-action@v1
       shell: bash
-    - id: check-return-value
-      run: echo "::set-output name=return-value::$(echo $return-value)"
+    - id: get-return-value
+      run: echo "::set-output name=return-value::"
       shell: bash
 
