@@ -1,5 +1,5 @@
-name: 'cpp-linter-action'
-description: 'Linter your C/C++ code in workflow.'
+name: C/C++ Lint Action
+description: Automatically checks push & PR changes with clang-format & clang-tidy, then post annotations/comments with faulty results.
 author: shenxianpeng
 branding:
   icon: "check-circle"
@@ -73,38 +73,37 @@ inputs:
     description: The directory containing compile_commands.json file.
     required: false
     default: ""
-outputs:
-  return-value:
-    description: An integer that can be used as a boolean value to indicate if all checks failed.
-    value: ${{ steps.get-return-value.outputs.return-value }}
-# outputs:
-#   random-number:
-#     description: "Random number"
-#     value: ${{ steps.random-number-generator.outputs.random-number }}
+  quiet-fail:
+    description: A flag that can be used to exit with a non-successfull error code (not '0') if any checks failed.
+    required: false
+    default: true
 runs:
   using: "composite"
   steps:
-    - run: |
-        echo "Install clang-tools"
-        pip install clang-tools
-        clang-tools -i ${{ inputs.version }}
-        echo "Install cpp-linter"
-        python3 -m pip install git+https://github.com/cpp-linter/cpp-linter-action@v1
+    - name: Install action dependencies
+      shell: bash
+      run: python3 -m pip install clang-tools cpp-linter
+    - name: Install clang-tools binary executables
+      shell: bash
+      run: clang-tools -i ${{ inputs.version }}
+    - name: Run cpp-linter
+      id: cpp-linter
+      shell: bash
+      run: |
         cpp-linter \
-          --style=${{ inputs.style }} \
+          --style="${{ inputs.style }}" \
           --extensions=${{ inputs.extensions }} \
-          --tidy-checks=${{ inputs.tidy-checks }} \
+          --tidy-checks="${{ inputs.tidy-checks }}" \
           --repo-root=${{ inputs.repo-root }} \
           --version=${{ inputs.version }} \
           --verbosity=${{ inputs.verbosity }} \
           --lines-changed-only=${{ inputs.lines-changed-only }} \
           --files-changed-only=${{ inputs.files-changed-only }} \
           --thread-comments=${{ inputs.thread-comments }} \
-          --ignore=${{ inputs.ignore }} \
+          --ignore="${{ inputs.ignore }}" \
           --database=${{ inputs.database }} \
           --file-annotations=${{ inputs.file-annotations }}
+    - name: set output variable
+      if: steps.cpp-linter.outputs.checks-failed != 0 && inputs.quiet-fail != 'true'
       shell: bash
-    - id: get-return-value
-      run: echo "::set-output name=return-value::"
-      shell: bash
-
+      run: exit 1
