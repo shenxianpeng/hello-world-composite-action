@@ -76,6 +76,7 @@ inputs:
 outputs:
   checks-failed:
     description: An integer that can be used as a boolean value to indicate if all checks failed.
+    value: ${{ steps.set-output-variable.outputs.checks-failed }}
 runs:
   using: "composite"
   steps:
