@@ -12,5 +12,5 @@ jobs:
           style: 'llvm'
           # tidy-checks: '-*'
           # files-changed-only: false
-      - run: echo ${{ steps.linter.outputs.return-code }}
+      - run: echo random-number ${{ steps.linter.outputs.random-number }}
         shell: bash

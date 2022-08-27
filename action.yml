@@ -74,9 +74,9 @@ inputs:
     required: false
     default: ""
 outputs:
-  return-code:
-    description: "An integer that can be used as a boolean value to indicate if all checks failed."
-    value: ${{ steps.set-return-code.outputs.return-code }}
+  random-number:
+    description: "Random number"
+    value: ${{ steps.random-number-generator.outputs.random-number }}
 runs:
   using: "composite"
   steps:
@@ -103,6 +103,6 @@ runs:
           --ignore="${{ inputs.ignore }}" \
           --database=${{ inputs.database }} \
           --file-annotations=${{ inputs.file-annotations }}
-    - id: set-return-code
-      run: echo "::set-output name=return-code::"
+    - id: random-number-generator
+      run: echo "::set-output name=random-number::$(echo $RANDOM)"
       shell: bash
