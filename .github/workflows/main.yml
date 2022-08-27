@@ -10,7 +10,7 @@ jobs:
         uses: shenxianpeng/hello-world-composite-action@devel
         with:
           style: 'llvm'
-          tidy-checks: '-*'
+          # tidy-checks: '-*'
           # files-changed-only: false
       - run: echo ${{ steps.linter.outputs.checks-failed }}
         shell: bash
