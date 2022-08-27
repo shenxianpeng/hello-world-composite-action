@@ -74,9 +74,9 @@ inputs:
     required: false
     default: ""
 outputs:
-  random-number:
-    description: "Random number"
-    value: ${{ steps.random-number-generator.outputs.random-number }}
+  return-value:
+    description: "Return code value"
+    value: ${{ steps.set-return-value.outputs.return-value }}
 runs:
   using: "composite"
   steps:
@@ -103,6 +103,6 @@ runs:
           --ignore="${{ inputs.ignore }}" \
           --database=${{ inputs.database }} \
           --file-annotations=${{ inputs.file-annotations }}
-    - id: random-number-generator
-      run: echo "::set-output name=random-number::$(echo $RANDOM)"
+    - id: set-return-value
+      run: echo "::set-output name=return-value::$(echo $RANDOM)"
       shell: bash
