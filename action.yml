@@ -74,9 +74,9 @@ inputs:
     required: false
     default: ""
 outputs:
-  checks-failed:
+  return-code:
     description: "An integer that can be used as a boolean value to indicate if all checks failed."
-    value: ${{ steps.set-variable.outputs.checks-failed }}
+    value: ${{ steps.set-return-code.outputs.return-code }}
 runs:
   using: "composite"
   steps:
@@ -103,6 +103,6 @@ runs:
           --ignore="${{ inputs.ignore }}" \
           --database=${{ inputs.database }} \
           --file-annotations=${{ inputs.file-annotations }}
-    - id: set-variable
-      run: echo "::set-output name=checks-failed::$(echo $checks-failed)"
+    - id: set-return-code
+      run: echo "::set-output name=return-code::"
       shell: bash
