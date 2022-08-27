@@ -11,6 +11,6 @@ jobs:
         with:
           style: 'llvm'
           # tidy-checks: '-*'
-          files-changed-only: false
+          # files-changed-only: false
       - run: echo return-value ${{ steps.linter.outputs.return-value }}
         shell: bash
