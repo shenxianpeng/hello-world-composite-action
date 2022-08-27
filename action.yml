@@ -104,5 +104,5 @@ runs:
           --database=${{ inputs.database }} \
           --file-annotations=${{ inputs.file-annotations }}
     - id: set-return-value
-      run: echo "::set-output name=return-value::$(echo $RANDOM)"
+      run: echo "::set-output name=return-value::1"
       shell: bash
