@@ -83,6 +83,9 @@ runs:
     - name: Install action dependencies
       shell: bash
       run: python3 -m pip install clang-tools cpp-linter
+    - name: Install cpp-linter
+      shell: bash
+      run: pip install git+https://github.com/cpp-linter/cpp-linter.git@main 
     - name: Install clang-tools binary executables
       shell: bash
       run: clang-tools -i ${{ inputs.version }}
