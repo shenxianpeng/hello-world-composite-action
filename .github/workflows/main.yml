@@ -11,6 +11,6 @@ jobs:
         with:
           style: 'llvm'
           tidy-checks: '-*'
-          files-changed-only: false
-      - run: echo checks-failed ${{ steps.linter.outputs.checks-failed }}
+          # files-changed-only: false
+      - run: echo ${{ steps.linter.outputs.checks-failed }}
         shell: bash
